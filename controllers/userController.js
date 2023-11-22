@@ -107,7 +107,7 @@ exports.login = async (req, res) => {
       const payload = {
         email: user.email,
         id: user._id,
-        accountType: user.role,
+        role: user.role,
       };
   
       // password match and generate jwt

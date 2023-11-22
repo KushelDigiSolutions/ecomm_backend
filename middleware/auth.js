@@ -3,6 +3,7 @@ require("dotenv").config();
 const User = require("../models/userModel");
 
 // auth
+
 exports.auth = async (req, res, next) => {
   try {
     //  extract token
@@ -42,9 +43,10 @@ exports.auth = async (req, res, next) => {
 };
 
 // isStudent
+
 exports.isUser = async (req, res, next) => {
   try {
-    if (req.user.accountType !== "user") {
+    if (req.user.role !== "user") {
       return res.status(401).json({
         success: false,
         message: `this is protected route for user only`,
@@ -60,8 +62,6 @@ exports.isUser = async (req, res, next) => {
   }
 };
 
-
-
 // isAdmin
 
 exports.isAdmin = async (req, res, next) => {
@@ -69,7 +69,7 @@ exports.isAdmin = async (req, res, next) => {
     if (req.user.role !== "Admin") {
       return res.status(401).json({
         success: false,
-        message: `this is protected route for admin only`,
+        message: `this is protected route for Admin only`,
       });
     }
 

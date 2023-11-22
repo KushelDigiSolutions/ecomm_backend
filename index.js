@@ -23,7 +23,11 @@ dbConnect();
 
 const user = require('./routers/userRouter');
 
+const product = require('./routers/productRouter')
+
 app.use('/api/v1' , user);
+
+app.use('/api/v1' , product);
 
 
 
