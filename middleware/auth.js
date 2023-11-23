@@ -46,7 +46,7 @@ exports.auth = async (req, res, next) => {
 
 exports.isUser = async (req, res, next) => {
   try {
-    if (req.user.role !== "user") {
+    if (req.user.role !== "User") {
       return res.status(401).json({
         success: false,
         message: `this is protected route for user only`,

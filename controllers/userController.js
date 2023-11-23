@@ -167,7 +167,6 @@ exports.updateUser = async( req , res)=>{
 
  }
 
-
     if(description){
         userDetails.description = description;
     }

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const productModel = new mongoose.Schema({
+
   title: {
     type: String,
     trim: true,
@@ -9,19 +10,15 @@ const productModel = new mongoose.Schema({
     type: String,
     trim: true,
   },
-
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-
   price: {
     type: Number,
     required:true ,
   },
-
-
   thumbnail:[
     {
       type:String, 
@@ -31,6 +28,11 @@ const productModel = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+   cart:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"User"
+   }]
+
 });
 
 const productSchema = mongoose.model("Product", productModel);
