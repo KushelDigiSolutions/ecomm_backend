@@ -17,7 +17,7 @@ const { auth } = require("../middleware/auth")
 // ********************************************************************************************************
 
 // Route for user login
-router.get("/login", login)
+router.post("/login", login)
 
 // Route for user signup
 router.post("/signup", signUp)

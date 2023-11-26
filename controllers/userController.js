@@ -39,9 +39,14 @@ exports.getUserDetails = async(req , res)=>{
 exports.signUp = async(req , res)=>{
     try{
 
-        const {name , email , description , role , password} = req.body;
+        const { firstName,
+        lastName,
+        phoneNumber,
+        email,
+        password,
+        } = req.body;
 
-        if(!name || !email || !description || !role || !password){
+        if(!firstName || !email || !lastName || !phoneNumber || !password){
 
             return res.status(403).json({
                 success:false , 
@@ -61,7 +66,10 @@ exports.signUp = async(req , res)=>{
           const hashPassword = await bcrypt.hash(password ,10);
 
           const userDetails = await User.create({
-            name , email , description , role , password:hashPassword
+            firstName,
+            lastName,
+            phoneNumber,
+            email , password:hashPassword
         }) 
 
         return res.status(200).json({

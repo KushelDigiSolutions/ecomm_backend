@@ -1,11 +1,23 @@
 const mongoose = require("mongoose");
 
 const userModel =new mongoose.Schema({
-  name:String,
-  email:String,
-  description:String,
-  role:String,
-  password:String,
+firstName:{
+  type:String ,
+},
+lastName:{
+  type:String ,
+}
+,
+email:{
+  type:String,
+},
+phoneNumber:{
+  type:Number,
+},
+password:{
+  type:String,
+  trim:true
+}
   // ts:new Date().now
 });
 
