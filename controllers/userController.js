@@ -44,6 +44,7 @@ exports.signUp = async(req , res)=>{
         phoneNumber,
         email,
         password,
+        role
         } = req.body;
 
         if(!firstName || !email || !lastName || !phoneNumber || !password){
@@ -69,6 +70,7 @@ exports.signUp = async(req , res)=>{
             firstName,
             lastName,
             phoneNumber,
+            role,
             email , password:hashPassword
         }) 
 

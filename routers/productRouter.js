@@ -21,7 +21,7 @@ router.put("/updateProduct/:productId",auth , isAdmin ,  updateProduct)
 
 router.delete('/deleteProduct/:productID' ,auth ,isAdmin ,  deleteProduct);
 
-router.get('/fetchAllProducts' ,auth , fetchAllProducts);
+router.get('/fetchAllProducts' , fetchAllProducts);
 
 
 module.exports = router;

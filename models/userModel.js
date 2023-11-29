@@ -17,6 +17,11 @@ phoneNumber:{
 password:{
   type:String,
   trim:true
+},
+role:{
+  type:String ,
+  anum:["Admin","User"],
+  default:"User"
 }
   // ts:new Date().now
 });
