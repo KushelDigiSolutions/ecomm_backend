@@ -1,14 +1,20 @@
 const Product = require('../models/productModel');
+const { uploadToCloudinary } = require("../utils/imageUploader");
+
 
 // create product 
 
 exports.createProduct = async(req , res)=>{
     try{
 
-        const {title , description , price , thumbnail} = req.body;
-
+        const {title , description , price } = req.body;
+        
+        const thumbnail = req.files.thumbnail;
+        
+        console.log('req' , thumbnail);
+        
         const userId = req.user.id;
-
+        
         if(!title || !description || !price || !thumbnail){
             return res.status(403).json({
                 success:false , 
@@ -16,7 +22,17 @@ exports.createProduct = async(req , res)=>{
             })
         }
 
-        const product = await Product.create({title , description , price , thumbnail , postedBy:userId});
+         // upload to cloudinary
+    const image = await uploadToCloudinary(
+        thumbnail,
+        process.env.FOLDER_NAME,
+        1000,
+        1000
+      );
+
+      console.log('image' , image);
+
+        const product = await Product.create({title , description , price , thumbnail: image.secure_url  , postedBy:userId});
 
         return res.status(200).json({
             success:true , 

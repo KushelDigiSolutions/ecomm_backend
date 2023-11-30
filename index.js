@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 app.use(express.urlencoded({ extended: false }));
+const fileUpload = require("express-fileupload");
 
 const {cloudinaryConnect} = require("./config/cloudinary");
 
@@ -13,6 +14,13 @@ const port = 4000;
 const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
+
+app.use(
+  fileUpload({
+    useTempFiles:true,
+    tempFileDir:"/tmp"
+  })
+)
 
 
   // connect to cloudinary 
