@@ -19,7 +19,7 @@ const productModel = new mongoose.Schema({
     type: Number,
     required:true ,
   },
-  thumbnail:[
+  images:[
     {
       type:String, 
     }
@@ -31,9 +31,15 @@ const productModel = new mongoose.Schema({
    cart:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"User"
-   }]
+   }] , 
+   category:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Category",
+},
 
 });
+
+
 
 const productSchema = mongoose.model("Product", productModel);
 module.exports = productSchema;

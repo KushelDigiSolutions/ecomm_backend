@@ -1,5 +1,6 @@
 const Product = require('../models/productModel');
 const { uploadToCloudinary } = require("../utils/imageUploader");
+const Category  = require("../models/productCategory")
 
 
 // create product 
@@ -7,20 +8,29 @@ const { uploadToCloudinary } = require("../utils/imageUploader");
 exports.createProduct = async(req , res)=>{
     try{
 
-        const {title , description , price } = req.body;
+        const {title , description , price ,category} = req.body;
         
         const thumbnail = req.files.thumbnail;
         
-        console.log('req' , thumbnail);
         
         const userId = req.user.id;
         
-        if(!title || !description || !price || !thumbnail){
+        if(!title || !description || !price || !thumbnail ||!category){
             return res.status(403).json({
                 success:false , 
                 message:"all fields are required"
             })
         }
+
+          //   see the category is valid or not
+    const categoryDetails = await Category.findOne({_id:category});
+
+    if(!categoryDetails){
+        return res.status(404).json({
+            success:false,
+            message:"category details not found ",
+        })
+       }
 
          // upload to cloudinary
     const image = await uploadToCloudinary(
@@ -30,9 +40,18 @@ exports.createProduct = async(req , res)=>{
         1000
       );
 
-      console.log('image' , image);
 
-        const product = await Product.create({title , description , price , thumbnail: image.secure_url  , postedBy:userId});
+  
+
+        const product = await Product.create({title , description , price , thumbnail: image.secure_url  , postedBy:userId , category:categoryDetails._id});
+
+         // add course entry in Category => because us Category ke inside sare course aa jaye
+         await Category.findByIdAndUpdate({_id:categoryDetails._id} , {
+            $push:{
+                products:product._id,
+            }
+        },{new:true})
+        
 
         return res.status(200).json({
             success:true , 
@@ -56,6 +75,7 @@ exports.updateProduct = async(req , res)=>{
 
          const {title , description , price , thumbnail } = req.body;
 
+
          const {productId} = req.params;
 
          if(!productId){
@@ -74,7 +94,7 @@ exports.updateProduct = async(req , res)=>{
                 message:"product do not exist with this product ID"
             })
           }
-
+ 
 
         //   product ID is valid 
         if(title){
@@ -92,6 +112,8 @@ exports.updateProduct = async(req , res)=>{
         if(thumbnail){
             productDetails.thumbnail = thumbnail;
         }
+
+
 
        await productDetails.save();
 
@@ -122,8 +144,30 @@ exports.deleteProduct = async(req , res)=>{
             })
         }
 
+
+        // delete the product from the category
+        const categoryDetail = await Product.findById({_id:productID});
+
+        console.log('categorde' , categoryDetail);
+
+        // REMOVE THE ITEM FROM CATEGORY 
+        const categoryId = categoryDetail.category;
+
+        console.log('categoryId' , categoryId);
+
+        const details =  await Category.findByIdAndUpdate(
+            { _id: categoryId },
+             {$pull: { products: productID } }
+        );
+
+
         // chekc valid or not 
         const productDetails = await Product.findByIdAndDelete({_id:productID});
+
+   
+
+        console.log('deta' ,details);
+
 
   return res.status(200).json({
     success:true , 
