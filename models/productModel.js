@@ -32,6 +32,12 @@ const productModel = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"User"
    }] , 
+   wishlist:[
+    {
+      type: mongoose.Schema.Types.ObjectId , 
+      ref:"User"
+    }
+   ],
    category:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Category",
