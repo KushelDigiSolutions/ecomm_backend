@@ -137,6 +137,8 @@ exports.deleteProduct = async(req , res)=>{
 
         const {productID} = req.params;
 
+        console.log("productId" ,productID);
+
         if(!productID){
             return res.status(403).json({
                 success:false , 
@@ -151,7 +153,7 @@ exports.deleteProduct = async(req , res)=>{
         console.log('categorde' , categoryDetail);
 
         // REMOVE THE ITEM FROM CATEGORY 
-        const categoryId = categoryDetail.category;
+        const categoryId = categoryDetail._id;
 
         console.log('categoryId' , categoryId);
 

@@ -91,6 +91,82 @@ exports.signUp = async(req , res)=>{
     }
 }
 
+// admin login
+exports.adminLogin = async (req, res) => {
+    try {
+      //  get data from req.body
+      const { email, password } = req.body;
+
+
+  
+      //  validation data
+      if (!email || !password) {
+        return res.status(403).json({
+          success: false,
+          message: `all fields are required ,please try again`,
+        });
+      }
+      // user check exist of not
+      const user = await User.findOne({ email });
+      
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: `please register as Admin before login`,
+        });
+      }
+
+      if(user.role !== "Admin"){
+ return res.status(404).json({
+  success: false , 
+  message:"Admin do not found with this email id "
+ })
+      }
+  
+      const payload = {
+        email: user.email,
+        id: user._id,
+        role: user.role,
+      };
+  
+      // password match and generate jwt
+      if (await bcrypt.compare(password, user.password)) {
+
+        //  creating token
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: "3d",
+        });
+  
+        // todo: toObject ki jrurt ho skti hai fat skta hai
+        user.token = token;
+        user.password = undefined;
+  
+        const options = {
+          expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        };
+  
+        // create cookie and send response
+        res.cookie("token", token, options).status(200).json({
+          success: true,
+          token,
+          user,
+          message: `login successfully`,
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          message: `password inccorrect`,
+        });
+      }
+    } catch (error) {
+      console.log(`error in login `, error);
+      return res.status().json({
+        success: false,
+        message: ` login failure , please try again `,
+      });
+    }
+  };
 // login
 exports.login = async (req, res) => {
     try {
@@ -235,4 +311,34 @@ return res.status(500).json({
     message:"cannot delete account , please try again",
 })
     }
+}
+
+
+// get all users 
+exports.getAllUsers = async(req , res)=>{
+  try{
+
+    const allUsers =await User.find({});
+
+    if(allUsers.length === 0){
+      return res.status(403).json({
+        success:false ,
+        message:"no user found till now"
+      })
+    }
+
+    return res.status(200).json({
+      success:true , 
+      message:"successfuly fetch all users ",
+      data: allUsers
+    })
+    
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      success:false ,
+      message:"error in fetch all useres "
+    })
+  }
 }

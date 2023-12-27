@@ -6,9 +6,13 @@ const { uploadToCloudinary } = require("../utils/imageUploader");
 exports.createCategory = async (req, res) => {
   try {
     // fetch the data
-    const {title  } = req.body;
+    const {title} = req.body;
+
+    console.log("title" ,title);
         
     const thumbnail = req.files.thumbnail;
+
+    console.log("thubnail" , thumbnail);
     
     // validation
     if (!title || !thumbnail) {
@@ -25,6 +29,8 @@ exports.createCategory = async (req, res) => {
         1000
       );
 
+      console.log("imagea" ,image);
+
     // create entry in db
     const categoryDetails = await Category.create({ title ,images: image.secure_url});
     console.log(`categoryDetails `, categoryDetails);
@@ -35,6 +41,7 @@ exports.createCategory = async (req, res) => {
       message: "category created successfully",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: error.message,
