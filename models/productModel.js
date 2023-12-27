@@ -19,7 +19,7 @@ const productModel = new mongoose.Schema({
     type: Number,
     required:true ,
   },
-  images:[
+  thumbnail:[
     {
       type:String, 
     }

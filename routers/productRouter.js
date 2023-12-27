@@ -30,6 +30,7 @@ router.get('/fetchAllProducts' , fetchAllProducts);
 // ********************************************************************************************************
 
 router.post("/createCategory" , auth , isAdmin , createCategory);
+
 router.get("/showAllCategory"  , showAllCategory);
 router.get("/categoryPageDetails/:categoryId"  , categoryPageDetails);
 
