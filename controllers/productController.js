@@ -190,7 +190,7 @@ exports.deleteProduct = async(req , res)=>{
 exports.fetchAllProducts = async(req , res)=>{
     try{
 
-        const allProducts = await Product.find({});
+        const allProducts = await Product.find({}).populate("category");
 
         return res.status(200).json({
             success:true , 

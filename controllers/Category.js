@@ -80,6 +80,9 @@ exports.categoryPageDetails = async(req,res)=>{
       path:"products",
     }).exec(); 
 
+     console.log("seletedCategory" , selectedCategory);
+     
+
     // validation 
     if(!selectedCategory){
       return res.status(404).json({
