@@ -206,3 +206,40 @@ exports.fetchAllProducts = async(req , res)=>{
         })
     }
 }
+
+
+exports.getProductById = async(req , res)=>{
+    try{
+
+        const {productId} = req.params;
+
+        if(!productId){
+            return res.status(403).json({
+                success:false , 
+                message:"please send the product Id "
+            })
+        }
+
+         const productDetails = await Product.findOne({_id:productId});
+
+         if(!productDetails){
+            return res.status(404).json({
+                success:false , 
+                message:"no product found with this id "
+            })
+         }
+
+         return res.status(200).json({
+            success:true , 
+            message:"successfuly fetch the product Details", 
+            data:productDetails
+         })
+
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false , 
+            message:"internal server error in get product by id"
+        })
+    }
+}

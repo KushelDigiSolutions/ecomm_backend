@@ -1,4 +1,7 @@
 const Category = require("../models/productCategory");
+const Product = require("../models/productModel");
+const { ObjectId } = require('mongodb');
+
 const { uploadToCloudinary } = require("../utils/imageUploader");
 
 
@@ -8,11 +11,9 @@ exports.createCategory = async (req, res) => {
     // fetch the data
     const {title} = req.body;
 
-    console.log("title" ,title);
         
     const thumbnail = req.files.thumbnail;
 
-    console.log("thubnail" , thumbnail);
     
     // validation
     if (!title || !thumbnail) {
@@ -29,11 +30,11 @@ exports.createCategory = async (req, res) => {
         1000
       );
 
-      console.log("imagea" ,image);
 
     // create entry in db
     const categoryDetails = await Category.create({ title ,images: image.secure_url});
-    console.log(`categoryDetails `, categoryDetails);
+
+
 
     // return
     return res.status(200).json({
@@ -115,5 +116,114 @@ exports.categoryPageDetails = async(req,res)=>{
   success:false,
   message:error.message
  })
+  }
+}
+
+// ! delete category 
+exports.deleteCategory = async(req , res)=>{
+  try{
+
+    const {categoryId} = req.params;
+
+    console.log("categoryiD" ,categoryId);
+
+     const categoryDetail = await Category.findOne({_id:categoryId});
+
+     console.log("categoryDe" , categoryDetail);
+
+     if(!categoryDetail){
+      return res.status(404).json({
+        success:false ,
+        message:"category do not found with this ID"
+      })
+     }
+
+   for (let index = 0; index < categoryDetail.products.length; index++) {
+    const productId = categoryDetail.products[index];
+
+    const productIdObjectId = new ObjectId(productId);
+
+
+     await Product.findByIdAndDelete({_id:productIdObjectId} , {new:true});
+    
+   }
+
+     await Category.findByIdAndDelete({_id:categoryId} , {new:true});
+
+     return res.status(200).json({
+      success:true  ,
+      message:"Category deleted successfuly"
+     })
+
+  } catch(error){
+     console.log(error);
+     return res.status(500).json({
+      success:false , 
+      message:"internal server error , delete category"
+     })
+  }
+}
+
+// ! update category 
+exports.updateCategory = async(req , res)=>{
+  try{
+
+    const {categoryId} = req.params;
+
+    const {title , image} = req.body;
+
+    if(!categoryId){
+      return res.status(403).json({
+        success:false , 
+        message:"please send the cattegory Id"
+      })
+    }
+
+    if(!title && !image){
+      return res.status(403).json({
+        success:false , 
+        message:"no new update is done "
+      })
+    }
+
+    const categoryDetails = await Category.findOne({_id:categoryId});
+
+    if(!categoryDetails){
+      return res.status(404).json({
+        success:false , 
+        message:"no category found with this Id"
+      })
+    }
+
+
+     if(title){
+      categoryDetails.title = title;
+     }
+     if(image){
+      const imageDetail = await uploadToCloudinary(
+        image,
+        process.env.FOLDER_NAME,
+        1000,
+        1000
+      );
+
+      categoryDetails.images = imageDetail.secure_url;
+
+     }
+
+     await categoryDetails.save();
+
+     return res.status(200).json({
+      success:true , 
+      message:"successfuly updated the category"
+     })
+
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      success:false , 
+      message:"update category intenal server error"
+    })
   }
 }
