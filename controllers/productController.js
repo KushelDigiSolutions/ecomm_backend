@@ -73,7 +73,9 @@ exports.createProduct = async(req , res)=>{
 exports.updateProduct = async(req , res)=>{
     try{
 
-         const {title , description , price , thumbnail } = req.body;
+         const {title , description , price  } = req.body;
+
+         const thumbnail = req.files.thumbnail;
 
 
          const {productId} = req.params;
@@ -110,7 +112,16 @@ exports.updateProduct = async(req , res)=>{
         }
 
         if(thumbnail){
-            productDetails.thumbnail = thumbnail;
+
+                  // upload to cloudinary
+    const image = await uploadToCloudinary(
+        thumbnail,
+        process.env.FOLDER_NAME,
+        1000,
+        1000
+      );
+
+            productDetails.thumbnail = image.secure_url;
         }
 
 
