@@ -97,7 +97,9 @@ exports.fetchAllCartItem = async (req, res) => {
 
     const cartItems = await Product.find({ cart: userId });
 
-    res.status(200).json({ cartItems });
+    res.status(200).json({success:true ,
+       cartItems , 
+      message:"successfuly fetch the all cart item of user " });
   } catch (error) {
     console.error(error);
     res

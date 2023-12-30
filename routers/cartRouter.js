@@ -9,6 +9,7 @@ fetchAllCartItem , addToCart , removeFromCart
 
 
 const { auth  , isUser } = require("../middleware/auth");
+
 const { addToWishlist, removeFromWishlist, fetchAllWishlistItem, removeAllWislist } = require("../controllers/wishlistController");
 
 

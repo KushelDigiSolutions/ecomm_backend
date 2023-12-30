@@ -170,7 +170,10 @@ exports.updateCategory = async(req , res)=>{
 
     const {categoryId} = req.params;
 
-    const {title , image} = req.body;
+    const {title } = req.body;
+
+    const thumbnail = req.files.thumbnail;
+
 
     if(!categoryId){
       return res.status(403).json({
@@ -179,7 +182,7 @@ exports.updateCategory = async(req , res)=>{
       })
     }
 
-    if(!title && !image){
+    if(!title && !thumbnail){
       return res.status(403).json({
         success:false , 
         message:"no new update is done "
@@ -199,9 +202,9 @@ exports.updateCategory = async(req , res)=>{
      if(title){
       categoryDetails.title = title;
      }
-     if(image){
+     if(thumbnail){
       const imageDetail = await uploadToCloudinary(
-        image,
+        thumbnail,
         process.env.FOLDER_NAME,
         1000,
         1000
