@@ -29,7 +29,9 @@ exports.addToWishlist = async(req , res)=>{
         await productDetails.wishlist.push(userId);
         await productDetails.save();
     
-        res.status(200).json({ message: "Product added to wishlist successfully" });
+        res.status(200).json({
+          success:true , 
+          message: "Product added to wishlist successfully" });
 
     } catch(error){
         console.log(error);

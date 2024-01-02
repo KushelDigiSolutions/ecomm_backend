@@ -32,9 +32,9 @@ router.post('/addToWishlist/:productId' , auth , isUser ,addToWishlist);
 
 router.delete("/removeFromWishlist/:productId" , auth , isUser , removeFromWishlist);
 
-router.get("/fetchAllWishlistItem/:productId" , auth , isUser , fetchAllWishlistItem);
+router.get("/fetchAllWishlistItem" , auth , isUser , fetchAllWishlistItem);
 
-router.delete("/removeAllWislist/:productId" , auth , isUser , removeAllWislist);
+router.delete("/removeAllWislist" , auth , isUser , removeAllWislist);
 
 
 module.exports = router;

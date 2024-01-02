@@ -32,6 +32,10 @@ const productModel = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"User"
    }] , 
+   quantity:{
+    type:Number ,
+    default:1
+   },
    wishlist:[
     {
       type: mongoose.Schema.Types.ObjectId , 
@@ -42,6 +46,7 @@ const productModel = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"Category",
 },
+
 
 });
 

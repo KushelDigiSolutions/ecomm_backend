@@ -42,7 +42,8 @@ app.use('/api/v1' , user);
 
 app.use('/api/v1' , product);
 
-
+const Payments = require("./routers/Payments");
+app.use("/api/v1/payment", Payments);
 
 
 app.listen(port, () => {
