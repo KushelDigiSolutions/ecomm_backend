@@ -22,7 +22,21 @@ role:{
   type:String ,
   anum:["Admin","User"],
   default:"User"
-}
+} , 
+address: {
+  country: {
+    type: String,
+  },
+  pincode: {
+    type: String,
+  },
+  addressLine: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+},
 
 });
 

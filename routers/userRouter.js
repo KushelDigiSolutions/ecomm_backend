@@ -4,11 +4,11 @@ const router = express.Router();
 
 // Import the required controllers and middleware functions
 const {
-login , signUp , updateUser , getUserDetails , deleteUser, adminLogin, getAllUsers
+login , signUp , updateUser , getUserDetails , deleteUser, adminLogin, getAllUsers, updateAddress
 } = require("../controllers/userController");
 
 
-const { auth, isAdmin } = require("../middleware/auth")
+const { auth, isAdmin, isUser } = require("../middleware/auth")
 
 // Routes for Login, Signup, and Authentication
 
@@ -27,6 +27,8 @@ router.post("/signup", signUp)
 router.get("/getAllUsers" , auth , isAdmin , getAllUsers);
 
 router.put('/updateDetails' ,auth ,  updateUser);
+
+router.put("/updateAddress" , auth ,isUser , updateAddress);
 
 router.delete('/deleteUser' ,auth , deleteUser);
 
