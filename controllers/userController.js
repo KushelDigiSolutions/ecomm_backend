@@ -342,3 +342,55 @@ exports.getAllUsers = async(req , res)=>{
     })
   }
 }
+
+// update address
+exports.updateAddress = async(req , res)=>{
+  try{
+ 
+    const {country , pincode , address , city} = req.body;
+  
+    if(!country || !pincode || !address || !city){
+      return res.status(403).json({
+        success:false ,
+        message:"please send all data of address"
+      })
+    }
+    const id = req.user.id;
+    console.log("id" ,id);
+
+    const updatedAddress = {
+      country , 
+      pincode , 
+      addressLine:address ,
+       city
+    }
+
+    const userDetails = await User.findById({_id:id});
+     if(userDetails){
+      userDetails.address = updatedAddress;
+
+await userDetails.save();
+return res.status(200).json({
+  success:true ,
+  messsage:"successfully save the address" , 
+  userDetails
+ })
+
+}
+else{
+  return res.status(404).json({
+    success:false ,
+    message:"User not found"
+  })
+}
+
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      success:false , 
+      message:"internal server error"
+    })
+  }
+} 
+
