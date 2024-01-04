@@ -42,12 +42,10 @@ const productModel = new mongoose.Schema({
       ref:"User"
     }
    ],
-   category:{
+   subCategory:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"Category",
+    ref:"subCategory",
 },
-
-
 });
 
 

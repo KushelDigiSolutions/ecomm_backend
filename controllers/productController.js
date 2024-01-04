@@ -1,6 +1,6 @@
 const Product = require('../models/productModel');
 const { uploadToCloudinary } = require("../utils/imageUploader");
-const Category  = require("../models/productCategory")
+const SubCategory  = require("../models/productSubCategory")
 
 
 // create product 
@@ -8,14 +8,14 @@ const Category  = require("../models/productCategory")
 exports.createProduct = async(req , res)=>{
     try{
 
-        const {title , description , price ,category} = req.body;
+        const {title , description , price ,subCategoryId} = req.body;
         
         const thumbnail = req.files.thumbnail;
         
         
         const userId = req.user.id;
         
-        if(!title || !description || !price || !thumbnail ||!category){
+        if(!title || !description || !price || !thumbnail ||!subCategoryId){
             return res.status(403).json({
                 success:false , 
                 message:"all fields are required"
@@ -23,12 +23,12 @@ exports.createProduct = async(req , res)=>{
         }
 
           //   see the category is valid or not
-    const categoryDetails = await Category.findOne({_id:category});
+    const subCategoryDetails = await SubCategory.findOne({_id:subCategoryId});
 
-    if(!categoryDetails){
+    if(!subCategoryDetails){
         return res.status(404).json({
             success:false,
-            message:"category details not found ",
+            message:"sub category details not found ",
         })
        }
 
@@ -40,13 +40,10 @@ exports.createProduct = async(req , res)=>{
         1000
       );
 
-
-  
-
-        const product = await Product.create({title , description , price , thumbnail: image.secure_url  , postedBy:userId , category:categoryDetails._id});
+        const product = await Product.create({title , description , price , thumbnail: image.secure_url  , postedBy:userId , subCategory:subCategoryDetails._id});
 
          // add course entry in Category => because us Category ke inside sare course aa jaye
-         await Category.findByIdAndUpdate({_id:categoryDetails._id} , {
+         await SubCategory.findByIdAndUpdate({_id:subCategoryDetails._id} , {
             $push:{
                 products:product._id,
             }
@@ -69,7 +66,6 @@ exports.createProduct = async(req , res)=>{
 }
 
 // update product 
-
 exports.updateProduct = async(req , res)=>{
     try{
 
@@ -148,7 +144,6 @@ exports.deleteProduct = async(req , res)=>{
 
         const {productID} = req.params;
 
-        console.log("productId" ,productID);
 
         if(!productID){
             return res.status(403).json({
@@ -158,28 +153,23 @@ exports.deleteProduct = async(req , res)=>{
         }
 
 
-        // delete the product from the category
-        const categoryDetail = await Product.findById({_id:productID});
+        // delete the product from the sub Category
+        const productDetails = await Product.findById({_id:productID});
 
-        console.log('categorde' , categoryDetail);
 
         // REMOVE THE ITEM FROM CATEGORY 
-        const categoryId = categoryDetail._id;
+        const subCategoryId = productDetails.subCategory;
 
-        console.log('categoryId' , categoryId);
 
-        const details =  await Category.findByIdAndUpdate(
-            { _id: categoryId },
+         await SubCategory.findByIdAndUpdate(
+            { _id: subCategoryId },
              {$pull: { products: productID } }
         );
 
 
-        // chekc valid or not 
-        const productDetails = await Product.findByIdAndDelete({_id:productID});
+        // delete the product  
+         await Product.findByIdAndDelete({_id:productID});
 
-   
-
-        console.log('deta' ,details);
 
 
   return res.status(200).json({
@@ -201,7 +191,7 @@ exports.deleteProduct = async(req , res)=>{
 exports.fetchAllProducts = async(req , res)=>{
     try{
 
-        const allProducts = await Product.find({}).populate("category");
+        const allProducts = await Product.find({}).populate("subCategory");
 
         return res.status(200).json({
             success:true , 
@@ -218,7 +208,7 @@ exports.fetchAllProducts = async(req , res)=>{
     }
 }
 
-
+// get product by id
 exports.getProductById = async(req , res)=>{
     try{
 

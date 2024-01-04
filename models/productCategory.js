@@ -6,17 +6,18 @@ const categorySchema = new mongoose.Schema({
     title:{
         type:String,
         required:true,
-
     },
    images:
     {
         type:String
     }
      , 
-   products:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Product",
-}],
+// ! sub category 
+subCategory:[
+    {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"subCategory",
+    }],
     
 })
 
