@@ -229,12 +229,7 @@ exports.getProductsByCategoryId = async(req ,res)=> {
     // Find the category with the provided ID
     const {categoryId} = req.params;
 
-
-    console.log(categoryId);
-
     const categoryDetail = await Category.findById({_id:categoryId});
-
-    console.log("categoryetail",categoryDetail);
 
 
     if (!categoryDetail) {
