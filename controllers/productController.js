@@ -71,7 +71,7 @@ exports.updateProduct = async(req , res)=>{
 
          const {title , description , price  } = req.body;
 
-         const thumbnail = req.files.thumbnail;
+         const thumbnail = req.files?.thumbnail;
 
 
          const {productId} = req.params;
@@ -241,6 +241,25 @@ exports.getProductById = async(req , res)=>{
         return res.status(500).json({
             success:false , 
             message:"internal server error in get product by id"
+        })
+    }
+}
+
+exports.totalProduct = async(req ,res)=>{
+    try{
+
+         const AllProduct = await Product.find({});
+
+         return res.status(200).json({
+            success:true ,
+            AllProduct
+         })
+
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false , 
+            message:"Internal server error "
         })
     }
 }

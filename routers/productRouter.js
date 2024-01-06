@@ -3,11 +3,11 @@ const express = require("express")
 const router = express.Router();
 
 // Import the required controllers and middleware functions
-const { createProduct , updateProduct , deleteProduct , fetchAllProducts, getProductById } = require("../controllers/productController");
+const { createProduct , updateProduct , deleteProduct , fetchAllProducts, getProductById, totalProduct } = require("../controllers/productController");
 
 
 const { auth , isAdmin } = require("../middleware/auth");
-const { createCategory , showAllCategory , deleteCategory, updateCategory } = require("../controllers/Category");
+const { createCategory , showAllCategory , deleteCategory, updateCategory, fetchCategoryPageDetail, getProductsByCategoryId } = require("../controllers/Category");
 const { createSubCategory , fetchAllSubCategoryOfCategory , subCategoryPageDetails, deleteSubCategory , updateSubCategory } = require("../controllers/SubCategory");
 
 
@@ -18,6 +18,8 @@ const { createSubCategory , fetchAllSubCategoryOfCategory , subCategoryPageDetai
 router.post("/createProduct",auth , isAdmin ,  createProduct)
 
 router.put("/updateProduct/:productId",auth , isAdmin ,  updateProduct)
+
+router.get("/totalProduct" , totalProduct);
 
 router.delete('/deleteProduct/:productID' ,auth ,isAdmin ,  deleteProduct);
 
@@ -35,8 +37,12 @@ router.post("/createCategory" , auth , isAdmin , createCategory);
 router.delete("/deleteCategory/:categoryId" , auth , isAdmin , deleteCategory);
 
 router.get("/showAllCategory"  , showAllCategory);
+router.get("/categoryPageDetails/:categoryId"  , fetchCategoryPageDetail);
+
 
 router.put("/updateCategory/:categoryId" , auth , isAdmin , updateCategory);
+
+router.get("/getProductsByCategoryId/:categoryId" , getProductsByCategoryId)
 
 
 

@@ -1,4 +1,6 @@
 const Category = require("../models/productCategory");
+const SubCategory = require("../models/productSubCategory");
+const Product = require("../models/productModel");
 
 const { uploadToCloudinary } = require("../utils/imageUploader");
 
@@ -123,7 +125,7 @@ exports.updateCategory = async(req , res)=>{
 
     const {title } = req.body;
 
-    const thumbnail = req.files.thumbnail;
+    const thumbnail = req.files?.thumbnail;
 
 
     if(!categoryId){
@@ -140,7 +142,7 @@ exports.updateCategory = async(req , res)=>{
       })
     }
 
-    const categoryDetails = await Category.findOne({_id:categoryId});
+    const categoryDetails = await Category.findById({_id:categoryId});
 
     if(!categoryDetails){
       return res.status(404).json({
@@ -178,6 +180,102 @@ exports.updateCategory = async(req , res)=>{
     return res.status(500).json({
       success:false , 
       message:"update category intenal server error"
+    })
+  }
+}
+
+
+exports.fetchCategoryPageDetail = async(req , res)=>{
+  try{
+
+       const {categoryId} = req.params;
+
+           if(!categoryId){
+              return res.status(403).json({
+                  success:false ,
+                  message:"Please send the category Id"
+              })
+           }
+
+           const categoryDetails = await Category.findById({_id:categoryId});
+
+           if(!categoryDetails){
+              return res.status(404).json({
+                  success:false , 
+                  message:"Cannot find the category with this id "
+              })
+           }
+
+            return res.status(200).json({
+              success:true ,
+              message:"Successfuly fetch the subCategory",
+               categoryDetails
+            })
+
+
+
+  } catch(error){
+      console.log(error);
+      return res.status(500).json({
+          success:false , 
+          message:"Internal server error "
+      })
+  }
+}
+
+
+exports.getProductsByCategoryId = async(req ,res)=> {
+  try {
+    // Find the category with the provided ID
+    const {categoryId} = req.params;
+
+
+    console.log(categoryId);
+
+    const categoryDetail = await Category.findById({_id:categoryId});
+
+    console.log("categoryetail",categoryDetail);
+
+
+    if (!categoryDetail) {
+      console.log("Category not found");
+      return res.status(403).json({
+        success:false ,
+        messagge:"Catgoey do not found with this id"
+      })
+    }
+
+    // Find the subcategories associated with the category
+    const subcategories = await SubCategory.find({
+      _id: { $in: categoryDetail.subCategory }
+    }).exec();
+ 
+    console.log("subcate",subcategories);
+
+    // Extract product IDs from the subcategories
+    const productIds = subcategories.flatMap(subcategory => subcategory.products);
+
+    console.log("products",productIds);
+    
+    // Find all products based on the extracted IDs
+    const products = await Product.find({
+      _id: { $in: productIds }
+    }).exec();
+    
+    console.log("products2",products);
+    
+
+    return res.status(200).json({
+      success:true ,
+      message:" Successfuly  fetch",
+      products
+    })
+
+  } catch (error) {
+    console.error("Error retrieving products by category ID:", error);
+    res.status(500).json({
+      success:false ,
+      message:"internal server error"
     })
   }
 }

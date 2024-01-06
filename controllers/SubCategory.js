@@ -2,6 +2,7 @@ const Category = require("../models/productCategory")
 const SubCategory = require("../models/productSubCategory")
 const Product = require("../models/productModel")
 const { uploadToCloudinary } = require("../utils/imageUploader");
+const { ObjectId } = require('mongodb');
 
 
 // !create sub category 
@@ -113,13 +114,9 @@ exports.subCategoryPageDetails = async(req,res)=>{
       const {subCategoryId} = req.params;
   
       // get courses for specified category id
-      const selectedSubCategory = await SubCategory.findById(subCategoryId).populate({
-        path:"products",
-      }).exec(); 
-  
-       console.log("seletedCategory" , selectedSubCategory);
-       
-  
+      const selectedSubCategory = await SubCategory.findById({_id:subCategoryId});
+      
+    
       // validation 
       if(!selectedSubCategory){
         return res.status(404).json({
@@ -128,22 +125,14 @@ exports.subCategoryPageDetails = async(req,res)=>{
         })
       }
   
-      if(selectedSubCategory.products.length === 0){
-        return res.json({
-          success:false,
-          message:"no product found for the selected sub category",
-        })
-      }
-     
-  
       // ṛeturn 
       return res.status(200).json({
         success:true,
         message:"successfuly fetch all sub category details ",
-      data:{
+     
         selectedSubCategory,
       
-      }
+      
       })
            
     } catch(error){
@@ -161,8 +150,10 @@ exports.deleteSubCategory = async(req , res)=>{
   
       const {subCategoryId} = req.params;
   
-  
-       const subCategoryDetail = await SubCategory.findOne({_id:subCategoryId});
+      console.log("id",subCategoryId);
+      
+      const subCategoryDetail = await SubCategory.findOne({_id:subCategoryId});
+      console.log("deta",subCategoryDetail);
   
   
        if(!subCategoryDetail){
@@ -206,7 +197,7 @@ exports.updateSubCategory = async(req , res)=>{
   
       const {title } = req.body;
   
-      const thumbnail = req.files.thumbnail;
+      const thumbnail = req.files?.thumbnail;
   
   
       if(!subCategoryId){
