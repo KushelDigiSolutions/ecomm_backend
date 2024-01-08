@@ -92,7 +92,7 @@ exports.verifyPayment = async (req, res) => {
 
     await Payment.create({razorpay_order_id , razorpay_signature , razorpay_payment_id , user:uid})
 
-    res.redirect(`http://localhost:3001/paymentsuccess?reference=${razorpay_payment_id}`);
+    res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
 
   }
   else{
