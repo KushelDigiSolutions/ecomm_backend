@@ -91,7 +91,7 @@ exports.fetchAllSubCategoryOfCategory = async(req , res)=>{
               return res.status(200).json({
                 success:true ,
                 message:"Successfuly fetch the subCategory",
-                allSubCategory: categoryDetails
+                 categoryDetails
               })
 
 
@@ -114,7 +114,7 @@ exports.subCategoryPageDetails = async(req,res)=>{
       const {subCategoryId} = req.params;
   
       // get courses for specified category id
-      const selectedSubCategory = await SubCategory.findById({_id:subCategoryId});
+      const selectedSubCategory = await SubCategory.findById({_id:subCategoryId}).populate("products");
       
     
       // validation 
