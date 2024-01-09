@@ -88,7 +88,7 @@ exports.verifyPayment = async (req, res) => {
 
     // database store
 
-      const uid = new mongoose.Types.ObjectId(userId);
+    const uid = new mongoose.Types.ObjectId(userId);
 
     await Payment.create({razorpay_order_id , razorpay_signature , razorpay_payment_id , user:uid})
 
