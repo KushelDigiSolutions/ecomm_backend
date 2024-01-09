@@ -71,7 +71,7 @@ exports.removeFromCart = async (req, res) => {
     if (indexToRemove !== -1) {
       productDetails.cart.splice(indexToRemove, 1);
       await productDetails.save();
-      res.status(200).json({ message: "Product removed from cart successfully" });
+      res.status(200).json({ message: "Product removed from cart successfully"  , success:true});
 
     } else {
       res.status(404).json({ error: "User not found in the product's cart" });
