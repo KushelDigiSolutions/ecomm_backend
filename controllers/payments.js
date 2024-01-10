@@ -12,8 +12,6 @@ exports.capturePayment = async (req, res) => {
 
   const { products } = req.body;
 
-  // console.log("products" , products);
-
   if (products?.length === 0) {
     return res.json({ success: false, message: "please provide products Id" });
   }
@@ -21,8 +19,7 @@ exports.capturePayment = async (req, res) => {
   const userId = req.user.id;
 
   const productIds = products.map(product => new mongoose.Types.ObjectId(product));
-
-         
+    
   const userDetails = await User.findById(userId);
 
   const {address} = userDetails;
@@ -39,7 +36,9 @@ exports.capturePayment = async (req, res) => {
           .json({ success: false, message: "could not find the product" });
       }      
 
-      totalAmount += product.price  ;
+       const productQuantity = product.quantity;
+
+      totalAmount += product.price * productQuantity  ;
 
       // productDetails.push(product);
 

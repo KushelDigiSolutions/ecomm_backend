@@ -263,3 +263,42 @@ exports.totalProduct = async(req ,res)=>{
         })
     }
 }
+
+exports.productQuantity = async(req ,res)=>{
+    try{
+
+        const {change } = req.body;
+        console.log("cange");
+
+        const {productId} = req.params;
+
+        console.log("id" , productId);
+        
+        const ProductDetail = await Product.findById(productId);
+        console.log("ProductDetail" , ProductDetail);
+
+      if (change === "increment") {
+        ProductDetail.quantity += 1;
+      }
+       else if (change === "decrement") {
+        if (ProductDetail.quantity > 0) {
+            ProductDetail.quantity -= 1;
+        } 
+    }
+    
+
+    await ProductDetail.save();
+
+    return res.status(200).json({
+        success:true ,
+        message:"Succesfuly done"
+    })
+
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false ,
+            message:"Internal server error"
+        })
+    }
+}
