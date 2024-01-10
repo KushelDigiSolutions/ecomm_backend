@@ -6,9 +6,10 @@ const router = express.Router();
 const { createProduct , updateProduct , deleteProduct , fetchAllProducts, getProductById, totalProduct } = require("../controllers/productController");
 
 
-const { auth , isAdmin } = require("../middleware/auth");
+const { auth , isAdmin, isUser } = require("../middleware/auth");
 const { createCategory , showAllCategory , deleteCategory, updateCategory, fetchCategoryPageDetail, getProductsByCategoryId } = require("../controllers/Category");
 const { createSubCategory , fetchAllSubCategoryOfCategory , subCategoryPageDetails, deleteSubCategory , updateSubCategory } = require("../controllers/SubCategory");
+const { fetchOrderHistory } = require("../controllers/OrderController");
 
 
 // ********************************************************************************************************
@@ -44,8 +45,6 @@ router.put("/updateCategory/:categoryId" , auth , isAdmin , updateCategory);
 
 router.get("/getProductsByCategoryId/:categoryId" , getProductsByCategoryId)
 
-
-
 // ********************************************************************************************************
 //                                      product routes by using sub category 
 // ********************************************************************************************************
@@ -60,9 +59,11 @@ router.delete("/deleteSubCategory/:subCategoryId"  , deleteSubCategory);
 
 router.put("/updateSubCategory/:subCategoryId"  , updateSubCategory);
 
+// ********************************************************************************************************
+//                                      order routes  
+// ********************************************************************************************************
 
-
-
+router.get("/getOrderHistory" , auth , isUser , fetchOrderHistory);
 
 
 module.exports = router;
