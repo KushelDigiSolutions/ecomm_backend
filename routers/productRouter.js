@@ -3,7 +3,7 @@ const express = require("express")
 const router = express.Router();
 
 // Import the required controllers and middleware functions
-const { createProduct , updateProduct , deleteProduct , fetchAllProducts, getProductById, totalProduct } = require("../controllers/productController");
+const { createProduct , updateProduct , deleteProduct , fetchAllProducts, getProductById, totalProduct, productQuantity } = require("../controllers/productController");
 
 
 const { auth , isAdmin, isUser } = require("../middleware/auth");
@@ -27,6 +27,8 @@ router.delete('/deleteProduct/:productID' ,auth ,isAdmin ,  deleteProduct);
 router.get("/getProductById/:productId" , getProductById);
 
 router.get('/fetchAllProducts' , fetchAllProducts);
+
+router.post("/productQuantity/:productId" , auth , isUser , productQuantity);
 
 
 // ********************************************************************************************************
