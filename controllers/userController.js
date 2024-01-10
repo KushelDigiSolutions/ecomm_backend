@@ -356,7 +356,6 @@ exports.updateAddress = async(req , res)=>{
       })
     }
     const id = req.user.id;
-    console.log("id" ,id);
 
     const updatedAddress = {
       country , 

@@ -4,6 +4,7 @@ const Product = require("../models/productModel")
 const crypto = require('crypto');
 const mongoose = require("mongoose");
 const Payment = require("../models/paymentModel")
+const Order = require("../models/orderModel")
 
 // ! for multiple item payment at a time
 exports.capturePayment = async (req, res) => {
@@ -11,10 +12,20 @@ exports.capturePayment = async (req, res) => {
 
   const { products } = req.body;
 
+  // console.log("products" , products);
 
   if (products?.length === 0) {
     return res.json({ success: false, message: "please provide products Id" });
   }
+
+  const userId = req.user.id;
+
+  const productIds = products.map(product => new mongoose.Types.ObjectId(product));
+
+         
+  const userDetails = await User.findById(userId);
+
+  const {address} = userDetails;
 
   let totalAmount = 0;
 
@@ -30,6 +41,8 @@ exports.capturePayment = async (req, res) => {
 
       totalAmount += product.price  ;
 
+      // productDetails.push(product);
+
     } catch (error) {
       console.log(error);
       return res.status(500).json({ success: false, message: error.message });
@@ -37,7 +50,7 @@ exports.capturePayment = async (req, res) => {
   }
 
   const options = {
-    amount: (totalAmount+30) * 100,
+    amount: (totalAmount + 30) * 100,
     currency: "INR",
     receipt: Math.random(Date.now()).toString(),
   };
@@ -45,7 +58,7 @@ exports.capturePayment = async (req, res) => {
   try {
     const paymentResponse = await instance.orders.create(options);
 
-    console.log("paymentRess" , paymentResponse);
+    await Order.create({userId:userId ,totalAmount:options.amount ,  products:productIds , shippingAddress:address?.addressLine });
 
     res.json({
       success: true,
@@ -92,7 +105,10 @@ exports.verifyPayment = async (req, res) => {
 
     await Payment.create({razorpay_order_id , razorpay_signature , razorpay_payment_id , user:uid})
 
-    res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
+  return res.status(200).json({
+    success: true ,
+    message:"Successful payment"
+  })
 
   }
   else{
