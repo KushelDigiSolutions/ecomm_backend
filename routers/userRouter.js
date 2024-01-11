@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Import the required controllers and middleware functions
 const {
-login , signUp , updateUser , getUserDetails , deleteUser, adminLogin, getAllUsers, updateAddress
+login , signUp , updateUser , getUserDetails , deleteUser, adminLogin, getAllUsers, updateAddress, sendConnectMail
 } = require("../controllers/userController");
 
 
@@ -34,5 +34,6 @@ router.delete('/deleteUser' ,auth , deleteUser);
 
 router.get("/getUserDetail" ,auth, getUserDetails);
 
+router.post("/sendMail"  , sendConnectMail)
 
 module.exports = router;
