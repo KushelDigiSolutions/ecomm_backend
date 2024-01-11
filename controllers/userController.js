@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
+const mailSender = require("../utils/mailSender");
 
 // getUser
 exports.getUserDetails = async(req , res)=>{
@@ -393,3 +394,35 @@ else{
   }
 } 
 
+
+// send connect mail
+exports.sendConnectMail = async(req ,res)=>{
+  try{
+
+    const {email} = req.body;
+
+    if(!email){
+      return res.status(403).json({
+        success:false ,
+        message:"Please send the email id"
+      })
+    }
+
+    await mailSender(email , `You are connected with us` 
+    ,
+    ` hey !! `);
+
+    return res.status(200).json({
+      success:true,
+      message:"emai sent successfully "
+  })
+
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      success:false , 
+      message:"Intenal server error "
+    })
+  }
+}
